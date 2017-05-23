@@ -7,11 +7,11 @@ void Heap::insertar(long double datoInsertar){
     int posicionAInsertar = this->largo;//la posición de insertado siempre inicia en largo (última posición en 1-basado)
     //primero tengo que revisar si estaba vacío, si estaba vacío tengo que crearlo
     if(this->largo == 1){
-        this->arbol = (long double*) calloc(this->largo,sizeof(int));
+        this->arbol = (long double*) calloc(this->largo,sizeof(long double));
         //posiciónAInsertar ya está en la única posición: largo-1 == 0
     }
     else{//tengo que modificarlo
-        long double * punteroRevisar = (long double*) realloc(this->arbol,this->largo * sizeof(int));
+        long double * punteroRevisar = (long double*) realloc(this->arbol,this->largo * sizeof(long double));
         if(punteroRevisar != NULL){
             this->arbol = punteroRevisar;
         }
@@ -53,11 +53,11 @@ void Heap::eliminar(){
     this->arbol[0] = this->arbol[this->largo-1];//sustituyo el valor al inicio con el valor al final
     this->largo--;//reduzco en 1 el largo del heap
     if(this->largo == 0){//si llega a ser cero, entonces libero todo
-        free(this->arbol);
+        cfree(this->arbol);
         this->arbol = NULL;
     }
     else{
-        long double * punteroRevisar = (long double*) realloc(this->arbol,this->largo);
+        long double * punteroRevisar = (long double*) realloc(this->arbol,this->largo * sizeof(long double));
         if(punteroRevisar != NULL){
             this->arbol = punteroRevisar;
         }
