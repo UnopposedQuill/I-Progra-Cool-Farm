@@ -1,17 +1,17 @@
 
 #include "arboles.h"
 
-void Heap::insertar(long double datoInsertar){
+void Heap::insertar(unsigned long long datoInsertar){
 
     this->largo++;
     int posicionAInsertar = this->largo;//la posición de insertado siempre inicia en largo (última posición en 1-basado)
     //primero tengo que revisar si estaba vacío, si estaba vacío tengo que crearlo
     if(this->largo == 1){
-        this->arbol = (long double*) calloc(this->largo,sizeof(long double));
+        this->arbol = (unsigned long long int*) calloc(this->largo,sizeof(unsigned long long int));
         //posiciónAInsertar ya está en la única posición: largo-1 == 0
     }
     else{//tengo que modificarlo
-        long double * punteroRevisar = (long double*) realloc(this->arbol,this->largo * sizeof(long double));
+        unsigned long long int * punteroRevisar = (unsigned long long int*) realloc(this->arbol,this->largo * sizeof(unsigned long long int));
         if(punteroRevisar != NULL){
             this->arbol = punteroRevisar;
         }
@@ -57,7 +57,7 @@ void Heap::eliminar(){
         this->arbol = NULL;
     }
     else{
-        long double * punteroRevisar = (long double*) realloc(this->arbol,this->largo * sizeof(long double));
+        unsigned long long int * punteroRevisar = (unsigned long long int*) realloc(this->arbol,this->largo * sizeof(unsigned long long int));
         if(punteroRevisar != NULL){
             this->arbol = punteroRevisar;
         }

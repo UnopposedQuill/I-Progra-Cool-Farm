@@ -67,7 +67,7 @@ void Splay::subirARaiz(NodoSplay *raiz){
     this->raiz = raiz;
 }
 
-NodoSplay * Splay::buscar(long double datoBuscar){
+NodoSplay * Splay::buscar(unsigned long long int datoBuscar){
     NodoSplay * buscado = this->buscar_Aux(datoBuscar, this->raiz);
     if(buscado != NULL){
         this->subirARaiz(buscado);
@@ -75,7 +75,7 @@ NodoSplay * Splay::buscar(long double datoBuscar){
     return buscado;
 }
 
-NodoSplay * Splay::buscar_Aux(long double datoBuscar, NodoSplay * raiz){
+NodoSplay * Splay::buscar_Aux(unsigned long long int datoBuscar, NodoSplay * raiz){
     if(raiz == NULL){//si la raíz es nula, no encontró el nodo
         return NULL;//retorno NULL
     }
@@ -88,12 +88,12 @@ NodoSplay * Splay::buscar_Aux(long double datoBuscar, NodoSplay * raiz){
     return this->buscar_Aux(datoBuscar,raiz->derecho);//si no, entonces sólo podría estar en el derecho, y va a buscarlo allí
 }
 
-void Splay::insertar(long double datoInsertar){
+void Splay::insertar(unsigned long long int datoInsertar){
     this->raiz = this->insertar_Aux(datoInsertar,NULL, this->raiz);
     this->buscar(datoInsertar);//el buscado es el que enviará el nodo hacia la raíz
 }
 
-NodoSplay * Splay::insertar_Aux(long double datoInsertar, NodoSplay *padreRaiz, NodoSplay * raiz){
+NodoSplay * Splay::insertar_Aux(unsigned long long int datoInsertar, NodoSplay *padreRaiz, NodoSplay * raiz){
     if(raiz == NULL){//espacio al inicio
         return new NodoSplay(datoInsertar,padreRaiz);//inserta
     }
@@ -123,7 +123,7 @@ NodoSplay * Splay::mayor(NodoSplay *raiz){
  * Esta función elimina un nodo con el dato especificado dentro del árbol
  * @param datoEliminar El dato que se buscará, y eliminará el nodo cuyo dato equivalga
  */
-NodoSplay * Splay::eliminar(long double datoEliminar){
+NodoSplay * Splay::eliminar(unsigned long long datoEliminar){
     NodoSplay * nodoABorrar = this->buscar(datoEliminar);//paso el nodo a eliminar hasta arriba si es que existe
     this->raiz = this->eliminarNodo_aux(datoEliminar, this->raiz);
     return nodoABorrar;
@@ -135,7 +135,7 @@ NodoSplay * Splay::eliminar(long double datoEliminar){
  * @param raiz El árbol donde se desea eliminar el nodo
  * @return El nuevo árbol cuyo nodo ya fue eliminado
  */
-NodoSplay * Splay::eliminarNodo_aux(long double dato, NodoSplay * raiz) {
+NodoSplay * Splay::eliminarNodo_aux(unsigned long long dato, NodoSplay * raiz) {
     if(raiz == NULL){
         return NULL;
     }

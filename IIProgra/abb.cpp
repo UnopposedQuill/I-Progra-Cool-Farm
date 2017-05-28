@@ -27,7 +27,7 @@ void ArbolBinarioBusqueda::imprimirArbolProfundidadPreOrden_Aux(NodoArbol * raiz
  * @param nodoABuscar
  * @return
  */
-NodoArbol* ArbolBinarioBusqueda::buscarNodo(long double dato) {
+NodoArbol* ArbolBinarioBusqueda::buscarNodo(unsigned long long dato) {
     return this->buscarNodo_Aux(dato,this->raiz);
 }
 
@@ -49,7 +49,7 @@ NodoArbol* ArbolBinarioBusqueda::buscarNodo_Aux(NodoArbol* nodoABuscar, NodoArbo
  */
 
 
-NodoArbol* ArbolBinarioBusqueda::buscarNodo_Aux(long double dato, NodoArbol* raiz) {
+NodoArbol* ArbolBinarioBusqueda::buscarNodo_Aux(unsigned long long int dato, NodoArbol* raiz) {
     if(raiz == NULL){//si la raíz es nula, no encontró el nodo
         return NULL;//retorno NULL
     }
@@ -81,7 +81,7 @@ NodoArbol* ArbolBinarioBusqueda::mayor(NodoArbol* raiz) {
  * Esta función elimina un nodo con el dato especificado dentro del árbol
  * @param data El dato que se buscará, y eliminará el nodo cuyo dato equivalga
  */
-void ArbolBinarioBusqueda::eliminarNodo(long double data) {
+void ArbolBinarioBusqueda::eliminarNodo(unsigned long long data) {
     this->raiz = this->eliminarNodo_aux(data,this->raiz);
 }
 
@@ -91,7 +91,7 @@ void ArbolBinarioBusqueda::eliminarNodo(long double data) {
  * @param raiz El árbol donde se desea eliminar el nodo
  * @return El nuevo árbol cuyo nodo ya fue eliminado
  */
-NodoArbol* ArbolBinarioBusqueda::eliminarNodo_aux(long double dato, NodoArbol* raiz) {
+NodoArbol* ArbolBinarioBusqueda::eliminarNodo_aux(unsigned long long dato, NodoArbol* raiz) {
     if(raiz == NULL){
         return NULL;
     }
@@ -143,7 +143,7 @@ int ArbolBinarioBusqueda::cantidadNodos_Aux(NodoArbol* raiz) {
  * @param dato El entero que poseerá el nuevo nodo
  * @return La raíz del árbol con el nodo insertado
  */
-void ArbolBinarioBusqueda::insertar(long double dato){
+void ArbolBinarioBusqueda::insertar(unsigned long long int dato){
     this->raiz = this->insertar_Aux(new NodoArbol(dato),this->raiz);
 }
 

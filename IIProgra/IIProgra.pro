@@ -20,6 +20,7 @@ SOURCES += main.cpp\
     abb.cpp
 
 HEADERS  += mainwindow.h \
-    arboles.h
+    arboles.h \
+    partidas.h
 
 FORMS    += mainwindow.ui

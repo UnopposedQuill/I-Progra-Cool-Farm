@@ -113,7 +113,7 @@ NodoAVL * AVL::balancearArbol(NodoAVL *raiz){
  * @param datoBuscar El dato que se desea buscar
  * @return Un nodo cuyo dato es el mismo que se ingresó, o Nulo si no lo hayó
  */
-NodoAVL * AVL::buscar(long double datoBuscar){
+NodoAVL * AVL::buscar(unsigned long long datoBuscar){
     return this->buscar_Aux(datoBuscar, this->raiz);
 }
 
@@ -124,7 +124,7 @@ NodoAVL * AVL::buscar(long double datoBuscar){
  * @param raiz El árbol donde buscar el dato
  * @return Un nodo cuyo dato es el mismo que se ingresó, o Nulo si no lo hayó
  */
-NodoAVL * AVL::buscar_Aux(long double datoBuscar, NodoAVL * raiz){
+NodoAVL * AVL::buscar_Aux(unsigned long long datoBuscar, NodoAVL * raiz){
     if(raiz == NULL){//si la raíz es nula, no encontró el nodo
         return NULL;//retorno NULL
     }
@@ -137,12 +137,12 @@ NodoAVL * AVL::buscar_Aux(long double datoBuscar, NodoAVL * raiz){
     return this->buscar_Aux(datoBuscar,raiz->derecho);//si no, entonces sólo podría estar en el derecho, y va a buscarlo allí
 }
 
-void AVL::insertar(long double datoInsertar){
+void AVL::insertar(unsigned long long datoInsertar){
     this->raiz = this->insertar_Aux(datoInsertar,NULL, this->raiz);
     this->raiz = this->balancearArbol(this->raiz);//tengo que balancear el árbol
 }
 
-NodoAVL * AVL::insertar_Aux(long double datoInsertar, NodoAVL *padreRaiz, NodoAVL * raiz){
+NodoAVL * AVL::insertar_Aux(unsigned long long datoInsertar, NodoAVL *padreRaiz, NodoAVL * raiz){
     if(raiz == NULL){//espacio al inicio
         return new NodoAVL(datoInsertar,padreRaiz);//inserta
     }
@@ -172,7 +172,7 @@ NodoAVL * AVL::mayor(NodoAVL *raiz){
  * Esta función elimina un nodo con el dato especificado dentro del árbol
  * @param datoEliminar El dato que se buscará, y eliminará el nodo cuyo dato equivalga
  */
-NodoAVL * AVL::eliminar(long double datoEliminar){
+NodoAVL * AVL::eliminar(unsigned long long datoEliminar){
     NodoAVL * nodoABorrar = this->buscar(datoEliminar);//busco el nodo a eliminar hasta arriba si es que existe, para retornarlo
     this->raiz = this->eliminarNodo_aux(datoEliminar, this->raiz);//lo elimino, o intento eliminarlo
     this->balancearArbol(this->raiz);//falta balancear
@@ -185,7 +185,7 @@ NodoAVL * AVL::eliminar(long double datoEliminar){
  * @param raiz El árbol donde se desea eliminar el nodo
  * @return El nuevo árbol cuyo nodo ya fue eliminado
  */
-NodoAVL * AVL::eliminarNodo_aux(long double dato, NodoAVL * raiz) {
+NodoAVL * AVL::eliminarNodo_aux(unsigned long long dato, NodoAVL * raiz) {
     if(raiz == NULL){
         return NULL;
     }

@@ -9,29 +9,29 @@ using namespace std;
 struct Heap{
 
     int largo;
-    long double * arbol;
+    unsigned long long int * arbol;
 
     Heap(){
         this->arbol = NULL;
         this->largo = 0;
     }
 
-    void insertar(long double datoInsertar);
+    void insertar(unsigned long long int datoInsertar);
     void eliminar();
     void imprimirTodo();
 };
 
 struct NodoSplay{
-    long double dato;
+    unsigned long long int dato;
     NodoSplay * izquierdo, * derecho, * padre;
 
-    NodoSplay(long double dato, NodoSplay * padre){
+    NodoSplay(unsigned long long int dato, NodoSplay * padre){
         this->dato = dato;
         this->izquierdo = this->derecho = NULL;
         this->padre = padre;
     }
 
-    NodoSplay(long double dato){
+    NodoSplay(unsigned long long int dato){
         this->dato = dato;
         this->izquierdo = this->derecho = this->padre = NULL;
     }
@@ -48,9 +48,9 @@ struct Splay{
     //Usables por cualquiera
     void imprimirArbolProfundidadInOrden();
     void imprimirArbolProfundidadPreOrden();
-    void insertar(long double datoInsertar);
-    NodoSplay * eliminar(long double datoEliminar);
-    NodoSplay * buscar(long double datoBuscar);
+    void insertar(unsigned long long int datoInsertar);
+    NodoSplay * eliminar(unsigned long long int datoEliminar);
+    NodoSplay * buscar(unsigned long long int datoBuscar);
 
     //Usables si se sabe qué se está haciendo(funciones que hacen la recursividad para las cuatro de arriba)
     void rotarDerecha(NodoSplay * raiz);
@@ -59,24 +59,24 @@ struct Splay{
     void imprimirArbolProfundidadInOrden_Aux(NodoSplay * raiz);
     void imprimirArbolProfundidadPreOrden_Aux(NodoSplay * raiz);
     NodoSplay * mayor(NodoSplay * raiz);
-    NodoSplay * insertar_Aux(long double datoInsertar,NodoSplay * padreRaiz, NodoSplay * raiz);
-    NodoSplay * buscar_Aux(long double datoBuscar, NodoSplay * raiz);
-    NodoSplay * eliminarNodo_aux(long double dato,NodoSplay * raiz);
+    NodoSplay * insertar_Aux(unsigned long long int datoInsertar,NodoSplay * padreRaiz, NodoSplay * raiz);
+    NodoSplay * buscar_Aux(unsigned long long int datoBuscar, NodoSplay * raiz);
+    NodoSplay * eliminarNodo_aux(unsigned long long int dato,NodoSplay * raiz);
 };
 
 struct NodoAVL{
     int factorBalanceo;
-    long double dato;
+    unsigned long long int dato;
     NodoAVL * izquierdo, * derecho, * padre;
 
-    NodoAVL(long double dato, NodoAVL * padre){
+    NodoAVL(unsigned long long int dato, NodoAVL * padre){
         this->dato = dato;
         this->izquierdo = this->derecho = NULL;
         this->padre = padre;
         this->factorBalanceo = 0;
     }
 
-    NodoAVL(long double dato){
+    NodoAVL(unsigned long long int dato){
         this->dato = dato;
         this->izquierdo = this->derecho = this->padre = NULL;
         this->factorBalanceo = 0;
@@ -94,9 +94,9 @@ struct AVL{
     //Usables por cualquiera
     void imprimirArbolProfundidadInOrden();
     void imprimirArbolProfundidadPreOrden();
-    void insertar(long double datoInsertar);
-    NodoAVL * eliminar(long double datoEliminar);
-    NodoAVL * buscar(long double datoBuscar);
+    void insertar(unsigned long long int datoInsertar);
+    NodoAVL * eliminar(unsigned long long int datoEliminar);
+    NodoAVL * buscar(unsigned long long int datoBuscar);
 
     //Usables si se sabe qué se está haciendo(funciones que hacen la recursividad para las cuatro de arriba)
     static int altura(NodoAVL * raiz);
@@ -106,9 +106,9 @@ struct AVL{
     void imprimirArbolProfundidadInOrden_Aux(NodoAVL * raiz);
     void imprimirArbolProfundidadPreOrden_Aux(NodoAVL * raiz);
     NodoAVL * mayor(NodoAVL * raiz);
-    NodoAVL * insertar_Aux(long double datoInsertar,NodoAVL * padreRaiz, NodoAVL * raiz);
-    NodoAVL * buscar_Aux(long double datoBuscar, NodoAVL * raiz);
-    NodoAVL * eliminarNodo_aux(long double dato,NodoAVL * raiz);
+    NodoAVL * insertar_Aux(unsigned long long int datoInsertar,NodoAVL * padreRaiz, NodoAVL * raiz);
+    NodoAVL * buscar_Aux(unsigned long long int datoBuscar, NodoAVL * raiz);
+    NodoAVL * eliminarNodo_aux(unsigned long long int dato,NodoAVL * raiz);
 };
 
 struct NodoArbol{
@@ -131,18 +131,18 @@ struct ArbolBinarioBusqueda{
     }
 
     //funciones usables por cualquiera
-    void insertar(long double dato);
-    void eliminarNodo(long double data);
-    NodoArbol * buscarNodo(long double dato);
+    void insertar(unsigned long long int dato);
+    void eliminarNodo(unsigned long long int data);
+    NodoArbol * buscarNodo(unsigned long long int dato);
     int cantidadNodos();
     int cantidadNodos_Aux(NodoArbol * raiz);
     void imprimirArbolProfundidadPreOrden();
 
     //funciones que hacen la recursividad
     void imprimirArbolProfundidadPreOrden_Aux(NodoArbol * raiz);
-    NodoArbol * buscarNodo_Aux(long double dato, NodoArbol * raiz);
+    NodoArbol * buscarNodo_Aux(unsigned long long dato, NodoArbol * raiz);
     NodoArbol * insertar_Aux(NodoArbol * nodoAInsertar,NodoArbol * raiz);
-    NodoArbol * eliminarNodo_aux(long double dato,NodoArbol * raiz);
+    NodoArbol * eliminarNodo_aux(unsigned long long int dato,NodoArbol * raiz);
     NodoArbol * mayor(NodoArbol * raiz);
 };
 #endif // ARBOLES_H
