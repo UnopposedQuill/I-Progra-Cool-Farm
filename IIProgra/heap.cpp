@@ -20,7 +20,7 @@ void Heap::insertar(unsigned long long datoInsertar){
     //ahora tengo que realizar los intercambios de posiciones
     while(posicionAInsertar != 1){//mientras la posición a insertar sea diferente a la raiz, tengo que revisar posibles intercambios
         if(posicionAInsertar%2 == 0){//si la posición a insertar es par, la posible posición de intercambio está en k/2
-            if(datoInsertar > this->arbol[posicionAInsertar/2-1]){//si el valor a insertar es mayor a su k/2, el -1 es para convertirlo a 0-basado
+            if(datoInsertar >= this->arbol[posicionAInsertar/2-1]){//si el valor a insertar es mayor a su k/2, el -1 es para convertirlo a 0-basado
                 //entonces hago el intercambio de posiciones
                 this->arbol[posicionAInsertar-1] = this->arbol[posicionAInsertar/2-1];//coloco el valor del "nodo padre" en donde estaba insertando
                 this->arbol[posicionAInsertar/2-1] = datoInsertar;//luego coloco el dato a ser insertado en el lugar del "nodo padre"
@@ -30,7 +30,7 @@ void Heap::insertar(unsigned long long datoInsertar){
             break;//si es menor o igual entonces termina, pues ya verificó todo
         }
         else{
-            if(datoInsertar > this->arbol[(posicionAInsertar-3)/2]){//si el valor a insertar es mayor a su (k-3)/2, (ya convertido en 0-basado)
+            if(datoInsertar >= this->arbol[(posicionAInsertar-3)/2]){//si el valor a insertar es mayor a su (k-3)/2, (ya convertido en 0-basado)
                 //entonces hago el intercambio de posiciones
                 this->arbol[posicionAInsertar-1] = this->arbol[(posicionAInsertar-3)/2];//coloco el valor del "nodo padre" en donde estaba insertando
                 this->arbol[(posicionAInsertar-3)/2] = datoInsertar;//luego coloco el dato a ser insertado en el lugar del "nodo padre"
