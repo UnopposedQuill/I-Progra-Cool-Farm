@@ -1,0 +1,132 @@
+#include "hilocasillatablero.h"
+
+HiloCasillaTablero::HiloCasillaTablero()
+{
+    pausa = false;
+    semilla = 0;
+
+    posXGranjero = nullptr;
+    posYGranjero = nullptr;
+    //Plagas
+
+    probabilidadAparicionCuervo = nullptr;
+    probabilidadAparicionOveja = nullptr;
+    probabilidadAparicionPlaga = nullptr;
+
+    cantidadApareceCuervo = nullptr;
+    cantidadApareceOveja = nullptr;
+
+    tiempoApareceCuervo = nullptr;
+    tiempoApareceOveja = nullptr;
+    tiempoAparecePlaga = nullptr;
+
+
+
+    hayCuervo = false;
+    hayOveja = false;
+    hayPlaga = false;
+
+    tiempoComeCuervo = nullptr;
+    tiempoComeOveja = nullptr;
+    tiempoDestruccionPlaga = nullptr;
+
+    frutosComeCuervo = nullptr;
+    frutosComeOveja = nullptr;
+    //ARBOL
+    hayArbol = 0;
+    cantidadFrutos = 0;
+
+    crecimientoABB = nullptr;
+    frutosCosechaABB = nullptr;
+    cantSegCosechaABB = nullptr;
+
+    crecimientoHeap = nullptr;
+    frutosCosechaHeap = nullptr;
+    cantSegCosechaHeap = nullptr;
+
+    crecimientoAVL = nullptr;
+    frutosCosechaAVL = nullptr;
+    cantSegCosechaAVL = nullptr;
+
+    crecimientoBonus = nullptr;
+    frutosCosechaBonus = nullptr;
+    cantSegCosechaBonus = nullptr;
+
+    //FIN ARBOL
+}
+void HiloCasillaTablero::setInfo(int posXHilo, int posYHilo, int *posXGranjero, int *posYGranjero,int *probabilidadAparicionCuervo, int *cantidadApareceCuervo, int* tiempoApareceCuervo, int* frutosComeCuervo, int *tiempoComeCuervo, int *probabilidadAparicionOveja, int *cantidadApareceOveja, int *tiempoApareceOveja, int *frutosComeOveja, int *tiempoComeOveja, int *probabilidadAparicionPlaga, int* tiempoAparecePlaga, int *tiempoDestruccionPlaga, int *crecimientoABB, int *crecimientoHeap, int *crecimientoAVL, int *crecimientoBonus, int modificadorSemilla){
+    this->posXHilo = posXHilo;
+    this->posYHilo = posYHilo;
+
+    this->posXGranjero = posXGranjero;
+    this->posYGranjero = posYGranjero;
+    //Plagas
+    this->tiempoComeCuervo = tiempoComeCuervo;
+    this->tiempoComeOveja = tiempoComeOveja;
+    this->tiempoDestruccionPlaga = tiempoDestruccionPlaga;
+
+    //
+    this->probabilidadAparicionCuervo = probabilidadAparicionCuervo;
+    this->probabilidadAparicionOveja = probabilidadAparicionOveja;
+    this->probabilidadAparicionPlaga = probabilidadAparicionPlaga;
+
+    this->cantidadApareceCuervo = cantidadApareceCuervo;
+    this->cantidadApareceOveja = cantidadApareceOveja;
+
+    this->tiempoApareceCuervo = tiempoApareceCuervo;
+    this->tiempoApareceOveja = tiempoApareceOveja;
+    this->tiempoAparecePlaga = tiempoAparecePlaga;
+    this->frutosComeCuervo = frutosComeCuervo;
+    this->frutosComeOveja = frutosComeOveja;
+
+    //ARBOL
+    this->crecimientoABB = crecimientoABB;
+    this->crecimientoHeap = crecimientoHeap;
+    this->crecimientoAVL = crecimientoAVL;
+    this->crecimientoBonus = crecimientoBonus;
+    semilla = time(0) + modificadorSemilla;
+}
+
+void HiloCasillaTablero::run(){
+    std::mt19937 generator(semilla); // Generador de numeros randoms cuya seed es igual a time(0)
+    std::uniform_int_distribution<> distr(0, 100); // Distribuidor
+    //precioFrutoABB = distr(generator);
+    int contadorGenerarFrutos, contadorGenerarCuervos, contadorGenerarOvejas, contadorGenerarPlaga;
+    QMutex mutex;
+    while(true){
+        if(pausa){
+            msleep(500);
+        }
+
+
+        if (hayArbol != NoHayArbol){
+            if (*posXGranjero == posXHilo && *posYGranjero == posYHilo){//El granjero está sobre el hilo por lo que debo eliminar plagas
+                if (hayCuervo){
+                    hayCuervo = false;
+                }
+                else if(hayOveja){
+                    hayOveja = false;
+                }
+                else if (hayPlaga){
+                    hayPlaga = false;
+                }
+            }
+            else{//No está el granjero en la casilla
+                //Debo generar frutos
+                switch (hayArbol) {
+                case ABB:
+
+                    break;
+                default:
+                    break;
+                }
+                //Debo ver si genero una nueva plaga
+
+                //Debo hacer que la plaga coma frutos
+            }
+
+        }
+        //NO HAY ARBOL ENTONCES LA CASILLA NO HACE NADA
+        msleep(1000);//1 Segundo
+    }
+}
