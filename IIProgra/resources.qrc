@@ -1,0 +1,118 @@
+<RCC>
+    <qresource prefix="/oveja">
+        <file>Images/OVEJA.png</file>
+        <file>Images/OvejaObesa.png</file>
+    </qresource>
+    <qresource prefix="/cuervo">
+        <file>Images/Raven/raven-black0001.png</file>
+        <file>Images/Raven/raven-black0002.png</file>
+        <file>Images/Raven/raven-black0003.png</file>
+        <file>Images/Raven/raven-black0004.png</file>
+        <file>Images/Raven/raven-black0005.png</file>
+        <file>Images/Raven/raven-black0006.png</file>
+        <file>Images/Raven/raven-black0007.png</file>
+        <file>Images/Raven/raven-black0008.png</file>
+        <file>Images/Raven/raven-black0009.png</file>
+        <file>Images/Raven/raven-black0010.png</file>
+        <file>Images/Raven/raven-black0011.png</file>
+        <file>Images/Raven/raven-black0012.png</file>
+        <file>Images/Raven/raven-black0013.png</file>
+        <file>Images/Raven/raven-black0014.png</file>
+        <file>Images/Raven/raven-black0015.png</file>
+        <file>Images/Raven/raven-black0016.png</file>
+        <file>Images/Raven/raven-black0017.png</file>
+        <file>Images/Raven/raven-black0018.png</file>
+        <file>Images/Raven/raven-black0019.png</file>
+        <file>Images/Raven/raven-black0020.png</file>
+        <file>Images/Raven/raven-black0021.png</file>
+        <file>Images/Raven/raven-black0022.png</file>
+        <file>Images/Raven/raven-black0023.png</file>
+        <file>Images/Raven/raven-black0024.png</file>
+        <file>Images/Raven/raven-black0025.png</file>
+    </qresource>
+    <qresource prefix="/misc">
+        <file>Images/grass.png</file>
+        <file>Images/grassSelected.png</file>
+        <file>Images/Ocean.png</file>
+        <file>Images/gold.png</file>
+        <file>Images/MercadoChiva.png</file>
+        <file>Images/settings.png</file>
+        <file>Images/tree.png</file>
+        <file>Images/Scarecrow.png</file>
+        <file>Images/Info.png</file>
+    </qresource>
+    <qresource prefix="/arbol/binario_ordenado">
+        <file>Images/ABB/ABB_00.png</file>
+        <file>Images/ABB/ABB_01.png</file>
+        <file>Images/ABB/ABB_02.png</file>
+        <file>Images/ABB/ABB_03.png</file>
+        <file>Images/deadtrees/parasitoABB.png</file>
+    </qresource>
+    <qresource prefix="/arbol/heap">
+        <file>Images/Heap/HEAP_00.png</file>
+        <file>Images/Heap/HEAP_01.png</file>
+        <file>Images/Heap/HEAP_02.png</file>
+        <file>Images/Heap/HEAP_03.png</file>
+        <file>Images/deadtrees/parasitoHeap.png</file>
+    </qresource>
+    <qresource prefix="/arbol/avl">
+        <file>Images/AVL/AVL_00.png</file>
+        <file>Images/AVL/AVL_01.png</file>
+        <file>Images/AVL/AVL_02.png</file>
+        <file>Images/AVL/AVL_03.png</file>
+        <file>Images/deadtrees/parasitoAVL.png</file>
+    </qresource>
+    <qresource prefix="/arbol/bonus">
+        <file>Images/Bonus/BonusTree_00.png</file>
+        <file>Images/Bonus/BonusTree_01.png</file>
+        <file>Images/Bonus/BonusTree_02.png</file>
+        <file>Images/Bonus/BonusTree_03.png</file>
+        <file>Images/deadtrees/parasitoBonus.png</file>
+    </qresource>
+    <qresource prefix="/gifs/farmer">
+        <file>Gifs/farmerFront.gif</file>
+        <file>Gifs/farmerBack.gif</file>
+        <file>Gifs/farmerRight.gif</file>
+        <file>Gifs/farmerLeft.gif</file>
+    </qresource>
+    <qresource prefix="/grounds">
+        <file>Images/Grounds/grass2.png</file>
+        <file>Images/Grounds/sand1.png</file>
+        <file>Images/Grounds/sand2.png</file>
+        <file>Images/Grounds/sand3.png</file>
+        <file>Images/Grounds/water1.png</file>
+        <file>Images/Grounds/water2.png</file>
+    </qresource>
+    <qresource prefix="/farmer/front">
+        <file>Images/Farmer/front/front1.png</file>
+        <file>Images/Farmer/front/front2.png</file>
+        <file>Images/Farmer/front/front3.png</file>
+    </qresource>
+    <qresource prefix="/farmer/left">
+        <file>Images/Farmer/left/left1.png</file>
+        <file>Images/Farmer/left/left2.png</file>
+        <file>Images/Farmer/left/left3.png</file>
+    </qresource>
+    <qresource prefix="/farmer/back">
+        <file>Images/Farmer/back/back1.png</file>
+        <file>Images/Farmer/back/back2.png</file>
+        <file>Images/Farmer/back/back3.png</file>
+    </qresource>
+    <qresource prefix="/farmer/right">
+        <file>Images/Farmer/right/right1.png</file>
+        <file>Images/Farmer/right/right2.png</file>
+        <file>Images/Farmer/right/right3.png</file>
+    </qresource>
+    <qresource prefix="/accepted">
+        <file>Images/acceptedABB.png</file>
+        <file>Images/acceptedAVL.png</file>
+        <file>Images/acceptedBonus.png</file>
+        <file>Images/acceptedFarmer.png</file>
+        <file>Images/acceptedHeap.png</file>
+        <file>Images/acceptedMercado.png</file>
+        <file>Images/acceptedParasite.png</file>
+        <file>Images/acceptedRaven.png</file>
+        <file>Images/acceptedScare.png</file>
+        <file>Images/acceptedSheep.png</file>
+    </qresource>
+</RCC>

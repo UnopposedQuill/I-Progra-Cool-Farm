@@ -1,0 +1,740 @@
+#include "ventanaprincipal.h"
+#include "ui_ventanaprincipal.h"
+#include <QDebug>
+
+VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::VentanaPrincipal)
+{
+    ui->setupUi(this);
+
+
+
+
+    QLabel* nuevaLabel;
+
+    //Al revés porque así mejor para pintar
+    QPixmap pixMap;
+    pixMap.load(":/grounds/Images/Grounds/grass2.png");
+    for (int i = 0; i < 37 ; i++){
+
+        if (i == 26)
+            pixMap.load(":/grounds/Images/Grounds/sand1.png");
+        else if (i == 28)
+            pixMap.load(":/grounds/Images/Grounds/water1.png");
+        else if (i == 30)
+            pixMap.load(":/grounds/Images/Grounds/water2.png");
+        for(int j = 0; j < 22 ; j++){
+            nuevaLabel = new QLabel(this);
+            nuevaLabel->lower();
+            nuevaLabel->setGeometry((i*32),(j*32),32,32);
+            nuevaLabel->setPixmap(pixMap);
+            nuevaLabel->show();
+        }
+    }
+
+    /*
+    movieRaven= new QMovie(":/gifs/raven/Gifs/raven.gif");
+    movieRaven->setScaledSize(QSize(61, 61));
+    movieRaven->start();*/
+
+
+
+    /*movieMercado = new QMovie(":/gifs/raven/Gifs/MercadoChiva.gif");
+    movieMercado->setScaledSize(QSize(211, 131));
+    ui->labelMercadoChiva->setMovie(movieMercado);*/
+    ui->labelMercadoChiva->setHidden(true);
+
+    ui->bVerGraficas->move(1155,680);
+
+    //Info Arboles
+    costoABB = 100;
+    crecimientoABB = 200000;
+    frutosCosechaABB = 1;
+    cantSegCosechaABB = 20000;
+    menorVentaFrutosABB = 0;
+    mayorVentaFrutosABB = 5;
+
+    costoHeap = 130;
+    crecimientoHeap = 150000;
+    frutosCosechaHeap = 2;
+    cantSegCosechaHeap = 35000;
+    menorVentaFrutosHeap = 0;
+    mayorVentaFrutosHeap = 5;
+
+    costoAVL = 350;
+    crecimientoAVL = 500000;
+    frutosCosechaAVL = 1;
+    cantSegCosechaAVL = 60000;
+    menorVentaFrutosAVL = 2;
+    mayorVentaFrutosAVL = 20;
+
+    costoBonus = 600;
+    crecimientoBonus = 500000;
+    frutosCosechaBonus = 2;
+    cantSegCosechaBonus = 60000;
+    menorVentaFrutosBonus = 5;
+    mayorVentaFrutosBonus = 50;
+
+    //INFO Plagas
+    probabilidadAparicionOveja = 30;
+    cantidadOvejasAparecen = 1;
+    cantidadTardanAparecerOvejas = 60000;
+    frutosComeOveja = 1;
+    segundosOvejaComeFrutos = 15000;
+
+    probabilidadAparicionCuervo = 25;
+    cantidadCuervosAparecen = 2;
+    cantidadTardanAparecerCuervos = 60000;
+    frutosComeCuervo = 1;
+    segundosCuervoComeFrutos = 25000;
+
+    probabilidadAparicionPlaga = 10;
+    cantidadTardaAparecerPlaga = 120000;
+    cantidadSegundosDestruyePlaga = 180000;
+    //Info de MISC comprables en el mercado
+    costoEspanta = 200;
+    cantidadMaxEspanta = 2;
+    cantidadEspantaColocados = 0;
+    dinero = 500;
+
+
+
+
+    //Mercado
+    ui->bAbrirMercado->setDisabled(true);
+
+    tiempoAbreMercado = 5000;//Abre cada X milisegundos
+    cronometroAbrirMercado = new QTimer(this);//Llega a 0 se abre el mercado
+    connect(cronometroAbrirMercado, SIGNAL(timeout()), this, SLOT(abrirMercado()));
+
+    tiempoCierraMercado = 20000;//Cierra cada X milisegundos
+    cronometroCerrarMercado = new QTimer(this);//Llega a 0 y se cierra el mercado
+    connect(cronometroCerrarMercado, SIGNAL(timeout()), this, SLOT(cerrarMercado()));
+
+    cronometroTiempoRestante = new QTimer(this);
+    connect(cronometroTiempoRestante, SIGNAL(timeout()), this, SLOT(setLabelTiempoRestante()));
+
+    //MOUSE
+    posTableroX = 50;
+    posTableroY = 50;
+    repeticionClickTile = false;
+
+    //Cantidad de arboles iniciales
+    cantidadABB = 1;
+    cantidadHeap = 1;
+    cantidadAVL = 1;
+    cantidadBonus = 1;
+    cantidadEspanta = 1;
+
+    //INTERFAZ COLOCABLES
+    interfazColocarObjetos = new InterfazColocarObjetos(this);
+    interfazColocarObjetos->setGeometry(10,80,170,580);
+    interfazColocarObjetos->setWindowFlags(Qt::FramelessWindowHint);
+    interfazColocarObjetos->show();
+    interfazColocarObjetos->setHidden(true);
+
+    connect(interfazColocarObjetos, SIGNAL (colocarABB()), this, SLOT(colocarABB()));
+    connect(interfazColocarObjetos, SIGNAL (colocarHeap()), this, SLOT(colocarHeap()));
+    connect(interfazColocarObjetos, SIGNAL (colocarAVL()), this, SLOT(colocarAVL()));
+    connect(interfazColocarObjetos, SIGNAL (colocarBonus()), this, SLOT(colocarBonus()));
+    connect(interfazColocarObjetos, SIGNAL (colocarEspanta()), this, SLOT(colocarEspanta()));
+
+    //Establezco la matriz de labels el tamaño es 8x8 pues el i y el j son 8
+
+    //QPixmap pixMap;
+    pixMap.load(":/misc/Images/grass.png");
+    pixMap = pixMap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    for (int i = 0; i < 8; i++){
+        QVector<QLabel*> vectorZacate;
+        QVector<QLabel*> vectorCuervo;
+        QVector<QLabel*> vectorOveja;
+        QVector<QLabel*> vectorArbolesMisc;
+        QVector<QVector<bool>> vectorParaMatrizBool;
+        for (int j = 0; j < 8; j++){
+            //ZACATE
+            nuevaLabel = new QLabel(this);
+            nuevaLabel->setGeometry(190+(i*80),20+(j*80),80,80);
+            nuevaLabel->setPixmap(pixMap);
+            nuevaLabel->setStyleSheet("border: 1px solid grey");
+            nuevaLabel->show();
+            vectorZacate.push_back(nuevaLabel);
+            //ARBOL MISC
+            nuevaLabel = new QLabel(this);
+            nuevaLabel->setGeometry(190+(i*80),21+(j*80),80,80);
+            nuevaLabel->show();
+            vectorArbolesMisc.push_back(nuevaLabel);
+            //OVEJA
+            nuevaLabel = new QLabel(this);
+            nuevaLabel->setGeometry(190+(i*80),21+(j*80),80,80);
+            nuevaLabel->show();
+            vectorOveja.push_back(nuevaLabel);
+            //CUERVO
+            nuevaLabel = new QLabel(this);
+            nuevaLabel->setGeometry(190+(i*80),21+(j*80),80,80);
+            nuevaLabel->show();
+            vectorCuervo.push_back(nuevaLabel);
+
+            QVector <bool> vectorBooleano;
+            for (int k = 0 ; k < 5 ; k++){//[arbol][cuervo][oveja][ovejaObesa][espanta]
+                vectorBooleano.push_back(false);
+            }
+            vectorParaMatrizBool.push_back(vectorBooleano);
+
+        }
+        matrizLabelsZacate.push_back(vectorZacate);
+        matrizLabelsCuervo.push_back(vectorCuervo);
+        matrizLabelsOveja.push_back(vectorOveja);
+        matrizLabelsArbolesMisc.push_back(vectorArbolesMisc);
+        matrizBoolColocables.push_back(vectorParaMatrizBool);
+    }
+
+    //Granjero
+    posXGranjero = 7;
+    posYGranjero = 7;
+
+    caminarArriba = new QMovie(":/gifs/farmer/Gifs/farmerBack.gif");
+    caminarArriba->setScaledSize(QSize(33,33));
+    caminarArriba->setBackgroundColor(QColor(255, 255, 255, 0));
+
+    caminarIzquierda = new QMovie(":/gifs/farmer/Gifs/farmerLeft.gif");
+    caminarIzquierda->setScaledSize(QSize(33,33));
+    caminarIzquierda->setBackgroundColor(QColor(255, 255, 255, 0));
+
+    caminarAbajo = new QMovie(":/gifs/farmer/Gifs/farmerFront.gif");
+    caminarAbajo->setScaledSize(QSize(33,33));
+    caminarAbajo->setBackgroundColor(QColor(255, 255, 255, 0));
+
+    caminarDerecha = new QMovie(":/gifs/farmer/Gifs/farmerRight.gif");
+    caminarDerecha->setScaledSize(QSize(33,33));
+    caminarDerecha->setBackgroundColor(QColor(255, 255, 255, 0));
+    //caminarDerecha->setFormat;
+
+    labelGranjero = new QLabel(this);
+    labelGranjero->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
+    pixMap.load(":/farmer/front/Images/Farmer/front/front2.png");
+    labelGranjero->setPixmap(pixMap);
+    labelGranjero->setGeometry(790,620,33,33);
+    labelGranjero->show();
+    delayMovimientoGranjero = 1000;//Cada 5 segundos se mueve
+    cronometroMovimientoGranjero  = new QTimer(this);
+    connect(cronometroMovimientoGranjero, SIGNAL(timeout()), this, SLOT(moverGranjero()));
+
+    //qDebug()<<matrizBoolColocables[7][7][3];
+    //qDebug()<<matrizBoolColocables[7][7][5];
+/*
+    actualizarCeldaXY(0,0,true,false,true,1);
+    actualizarCeldaXY(1,0,true,true,false,1);
+    actualizarCeldaXY(2,0,true,true,false,2);
+    actualizarCeldaXY(3,0,true,true,false,3);
+    actualizarCeldaXY(4,0,true,true,false,4);
+
+    actualizarCeldaXY(0,1,false,false,false,1);
+    actualizarCeldaXY(1,1,false,false,false,2);
+    actualizarCeldaXY(2,1,false,false,false,3);
+    actualizarCeldaXY(3,1,false,false,false,4);*/
+
+    //INTERFAZ CONFIGURACION
+    interfazConfiguracion = new InterfazConfiguracion(this);
+    //interfazConfiguracion->setWindowFlags(Qt::FramelessWindowHint);
+    interfazConfiguracion->setPunterosConfiguracion(&costoABB, &crecimientoABB, &frutosCosechaABB, &cantSegCosechaABB, &menorVentaFrutosABB, &mayorVentaFrutosABB, &costoHeap, &crecimientoHeap, &frutosCosechaHeap, &cantSegCosechaHeap, &menorVentaFrutosHeap, &mayorVentaFrutosHeap, &costoAVL, &crecimientoAVL, &frutosCosechaAVL, &cantSegCosechaAVL, &menorVentaFrutosAVL, &mayorVentaFrutosAVL, &costoBonus, &crecimientoBonus, &frutosCosechaBonus, &cantSegCosechaBonus, &menorVentaFrutosBonus, &mayorVentaFrutosBonus, &costoEspanta, &cantidadMaxEspanta, &tiempoAbreMercado, &tiempoCierraMercado, &delayMovimientoGranjero, &probabilidadAparicionOveja, &cantidadOvejasAparecen, &cantidadTardanAparecerOvejas, &frutosComeOveja, &segundosOvejaComeFrutos, &probabilidadAparicionCuervo, &cantidadCuervosAparecen, &cantidadTardanAparecerCuervos, &frutosComeCuervo, &segundosCuervoComeFrutos, &probabilidadAparicionPlaga, &cantidadTardaAparecerPlaga, &cantidadSegundosDestruyePlaga);
+    interfazConfiguracion->show();
+    interfazConfiguracion->setHidden(true);
+    hilo = new HiloCasillaTablero();
+    hilo->setInfo(0,0,&posXGranjero, &posYGranjero, &probabilidadAparicionCuervo, &cantidadCuervosAparecen, &cantidadTardanAparecerCuervos, &frutosComeCuervo, &segundosCuervoComeFrutos, &probabilidadAparicionOveja, &cantidadOvejasAparecen, &cantidadTardanAparecerOvejas, &frutosComeOveja, &segundosOvejaComeFrutos, &probabilidadAparicionPlaga, &cantidadTardaAparecerPlaga, &cantidadSegundosDestruyePlaga, &crecimientoABB, &crecimientoHeap, &crecimientoAVL, &crecimientoBonus, 0);
+    hilo->run();
+    //agregarHiloCuervo(0,0,0);
+
+
+    cronometroAbrirMercado->start(tiempoAbreMercado);//Cada 30 segundos
+}
+
+VentanaPrincipal::~VentanaPrincipal()
+{
+    delete ui;
+}
+
+void VentanaPrincipal::mousePressEvent(QMouseEvent *ev)
+{
+    if (!(ev->x() < 190)){
+        int clickX = (ev->x()-190)/80;
+        int clickY = (ev->y()-20)/80;
+
+        if(clickX >= 0 && clickX < 8 && clickY >= 0 && clickY < 8){//Click en el tablero
+
+            QPixmap pixMap;
+            if (posTableroX == 50 || posTableroY == 50){//Primer click
+                pixMap.load(":/misc/Images/grassSelected.png");
+                pixMap = pixMap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                matrizLabelsZacate[clickX][clickY]->setPixmap(pixMap);
+
+
+                posTableroX = clickX;
+                posTableroY = clickY;
+                repeticionClickTile = false;
+            }
+            else if (posTableroX != clickX || posTableroY != clickY){//Click a un nuevo tile
+                //El tile seleccionado se vuelve normal
+                pixMap.load(":/misc/Images/grass.png");
+                pixMap = pixMap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                matrizLabelsZacate[posTableroX][posTableroY]->setPixmap(pixMap);
+
+                posTableroX = clickX;
+                posTableroY = clickY;
+
+                pixMap.load(":/misc/Images/grassSelected.png");
+                pixMap = pixMap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                matrizLabelsZacate[posTableroX][posTableroY]->setPixmap(pixMap);
+
+
+                repeticionClickTile = false;
+            }
+            else{//Mismo tile
+                if (repeticionClickTile){//Es la segunda vez que lo toco por lo que se decidio volverlo a seleccionar
+
+                    pixMap.load(":/misc/Images/grassSelected.png");
+                    pixMap = pixMap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                    matrizLabelsZacate[posTableroX][posTableroY]->setPixmap(pixMap);
+
+                    repeticionClickTile = false;
+                }
+                else{
+                    pixMap.load(":/misc/Images/grass.png");
+                    pixMap = pixMap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                    matrizLabelsZacate[posTableroX][posTableroY]->setPixmap(pixMap);
+
+                    repeticionClickTile = true;
+                }
+            }
+
+            if (!cronometroMovimientoGranjero->isActive()){
+                //No está activo porque no se mueve
+                cronometroMovimientoGranjero->start(delayMovimientoGranjero);
+            }
+            /*
+            qDebug()<< "X: " << posTableroX;
+            qDebug()<< "Y: " << posTableroY;
+            qDebug()<< "------------------";*/
+        }
+    }
+}
+/**
+ * @brief VentanaPrincipal::agregarHiloCuervo
+ * @param posX
+ * @param posY
+ * @return el indice del hilo agregado
+ */
+int VentanaPrincipal::agregarHiloCuervo(int posX, int posY, int pModificadorSleep){
+    HiloInterfazCuervo* nuevoHiloCuervo = new HiloInterfazCuervo(this, posX, posY, pModificadorSleep);
+    hilosCuervos.push_back(nuevoHiloCuervo);
+    //Como estoy insertando atras el indice va a ser el largo menos 1
+    int indiceHilo = hilosCuervos.length() - 1;
+    hilosCuervos[indiceHilo]->start();
+    return indiceHilo;
+
+}
+
+void VentanaPrincipal::modificarPosHiloCuervo(int indice, int posX, int posY){
+    hilosCuervos[indice]->modificarPos(posX, posY);
+}
+
+void VentanaPrincipal::iniciarHilos(){
+    for(int i = 0; i < hilosCuervos.length(); i++){
+        hilosCuervos[i]->run();
+    }
+}
+
+
+void VentanaPrincipal::actualizarCeldaXY(short posX, short posY, bool cuervo, bool oveja, bool ovejaObesa, int arbolMisc){
+    //La tercera posicion matrizBoolColocables[][][X] = [arbol][cuervo][oveja][ovejaObesa]
+    if (arbolMisc != -1)
+        matrizBoolColocables[posX][posY][0] = true;
+    else
+        matrizBoolColocables[posX][posY][0] = false;
+    matrizBoolColocables[posX][posY][1] = cuervo;
+    matrizBoolColocables[posX][posY][2] = oveja;
+    matrizBoolColocables[posX][posY][3] = ovejaObesa;
+
+    QPixmap pixMap;
+    QPixmap pixMap2;
+    QPixmap pixMap3;
+    QPixmap pixMap4;
+    switch(arbolMisc){
+        case 0://Parasito
+
+            break;
+        case 1://ABB
+            pixMap.load(":/arbol/binario_ordenado/Images/ABB/ABB_00.png");
+            pixMap = pixMap.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            matrizLabelsArbolesMisc[posX][posY]->setGeometry(210+(posX*80),40+(posY*80),60,60);
+            matrizLabelsArbolesMisc[posX][posY]->setPixmap(pixMap);
+            break;
+        case 2://HEAP
+            pixMap.load(":/arbol/heap/Images/HEAP/HEAP_00.png");
+            pixMap = pixMap.scaled(61, 71, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            matrizLabelsArbolesMisc[posX][posY]->setGeometry(220+(posX*80),30+(posY*80),61,71);
+            matrizLabelsArbolesMisc[posX][posY]->setPixmap(pixMap);
+            break;
+        case 3://AVL
+            pixMap.load(":/arbol/avl/Images/AVL/AVL_00.png");
+            pixMap = pixMap.scaled(61, 71, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            matrizLabelsArbolesMisc[posX][posY]->setGeometry(220+(posX*80),30+(posY*80),61,71);
+            matrizLabelsArbolesMisc[posX][posY]->setPixmap(pixMap);
+            break;
+        case 4://BONUS
+            pixMap.load(":/arbol/bonus/Images/BONUS/BonusTree_00.png");
+            pixMap = pixMap.scaled(61, 95, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            matrizLabelsArbolesMisc[posX][posY]->setGeometry(230+(posX*80),20+(posY*80),61,95);
+            matrizLabelsArbolesMisc[posX][posY]->setPixmap(pixMap);
+            break;
+        default:
+            break;
+    }
+
+    if (ovejaObesa){
+        pixMap4.load(":/oveja/Images/OvejaObesa.png");
+        pixMap4 = pixMap4.scaled(61, 51, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        matrizLabelsOveja[posX][posY]->setGeometry(190+(posX*80),40+(posY*80),61,51);
+        matrizLabelsOveja[posX][posY]->setPixmap(pixMap4);
+    }
+    else if (oveja){
+        pixMap3.load(":/oveja/Images/OVEJA.png");
+        pixMap3 = pixMap3.scaled(31, 31, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        matrizLabelsOveja[posX][posY]->setGeometry(190+(posX*80),70+(posY*80),31,31);
+        matrizLabelsOveja[posX][posY]->setPixmap(pixMap3);
+    }
+
+    if (cuervo){
+
+        pixMap2.load(":/cuervo/Images/Raven/raven-black0001.png");
+        pixMap2 = pixMap2.scaled(61, 51, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        matrizLabelsCuervo[posX][posY]->setGeometry(190+(posX*80),20+(posY*80),61,51);
+        matrizLabelsCuervo[posX][posY]->setPixmap(pixMap2);
+        /* ESTO ES SOLO UNA PRUEBA, SE SOBRE CARGA MUCHO LA COMPU :´(
+        matrizLabelsCuervo[posX][posY]->setMovie(movieRaven);
+        */
+    }
+}
+
+void VentanaPrincipal::on_bVerColocables_toggled(bool checked)
+{
+    interfazColocarObjetos->setHidden(!checked);
+    if (checked)//Se abre nuevamente, de otra manera se está ocultando
+        interfazColocarObjetos->setCantidad(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta);
+}
+
+//La tercera posicion matrizBoolColocables[][][X] = [arbol][cuervo][oveja][ovejaObesa][espanta]
+void VentanaPrincipal::colocarABB(){
+    if (posXGranjero > 7 || matrizBoolColocables[posXGranjero][posYGranjero][0]||matrizBoolColocables[posXGranjero][posYGranjero][3] ||matrizBoolColocables[posXGranjero][posYGranjero][4]|| cantidadABB <= 0){// || repeticionClickTile para que tenga que estar seleccionado
+        //No se puede colocar el arbol pues ya hay un arbol o una oveja obesa o  no tenemos arboles para plantar
+    }
+    else{
+        //Si se puede colocar
+        QPixmap pixMap;
+        pixMap.load(":/arbol/binario_ordenado/Images/ABB/ABB_00.png");
+        pixMap = pixMap.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        matrizLabelsArbolesMisc[posXGranjero][posYGranjero]->setGeometry(210+(posXGranjero*80),40+(posYGranjero*80),60,60);
+        matrizLabelsArbolesMisc[posXGranjero][posYGranjero]->setPixmap(pixMap);
+
+        matrizBoolColocables[posXGranjero][posYGranjero][0] = true;
+        cantidadABB--;
+        interfazColocarObjetos->setCantidad(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta);
+    }
+}
+//La tercera posicion matrizBoolColocables[][][X] = [arbol][cuervo][oveja][ovejaObesa][espanta]
+void VentanaPrincipal::colocarHeap(){
+    if (posXGranjero > 7 || matrizBoolColocables[posXGranjero][posYGranjero][0]||matrizBoolColocables[posXGranjero][posYGranjero][3] ||matrizBoolColocables[posXGranjero][posYGranjero][4]|| cantidadHeap <= 0){//|| repeticionClickTile para que tenga que estar seleccionado
+        //No se puede colocar el arbol pues ya hay un arbol o una oveja obesa o  no tenemos arboles para plantar
+    }
+    else{
+        //Si se puede colocar
+        QPixmap pixMap;
+        pixMap.load(":/arbol/heap/Images/HEAP/HEAP_00.png");
+        pixMap = pixMap.scaled(61, 71, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        matrizLabelsArbolesMisc[posXGranjero][posYGranjero]->setGeometry(220+(posXGranjero*80),30+(posYGranjero*80),61,71);
+        matrizLabelsArbolesMisc[posXGranjero][posYGranjero]->setPixmap(pixMap);
+
+        matrizBoolColocables[posXGranjero][posYGranjero][0] = true;
+        cantidadHeap--;
+        interfazColocarObjetos->setCantidad(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta);
+    }
+}
+//La tercera posicion matrizBoolColocables[][][X] = [arbol][cuervo][oveja][ovejaObesa][espanta]
+void VentanaPrincipal::colocarAVL(){
+    if (posXGranjero > 7 || matrizBoolColocables[posXGranjero][posYGranjero][0]||matrizBoolColocables[posXGranjero][posYGranjero][3] ||matrizBoolColocables[posXGranjero][posYGranjero][4]|| cantidadAVL <= 0){//|| repeticionClickTile para que tenga que estar seleccionado
+        //No se puede colocar el arbol pues ya hay un arbol o una oveja obesa o  no tenemos arboles para plantar
+    }
+    else{
+        //Si se puede colocar
+        QPixmap pixMap;
+        pixMap.load(":/arbol/avl/Images/AVL/AVL_00.png");
+        pixMap = pixMap.scaled(61, 71, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        matrizLabelsArbolesMisc[posXGranjero][posYGranjero]->setGeometry(220+(posXGranjero*80),30+(posYGranjero*80),61,71);
+        matrizLabelsArbolesMisc[posXGranjero][posYGranjero]->setPixmap(pixMap);
+
+        matrizBoolColocables[posXGranjero][posYGranjero][0] = true;
+        cantidadAVL--;
+        interfazColocarObjetos->setCantidad(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta);
+    }
+}
+//La tercera posicion matrizBoolColocables[][][X] = [arbol][cuervo][oveja][ovejaObesa][espanta]
+void VentanaPrincipal::colocarBonus(){
+    if (posXGranjero > 7 || matrizBoolColocables[posXGranjero][posYGranjero][0]||matrizBoolColocables[posXGranjero][posYGranjero][3] ||matrizBoolColocables[posXGranjero][posYGranjero][4]|| cantidadBonus <= 0){//|| repeticionClickTile para que tenga que estar seleccionado
+        //No se puede colocar el arbol pues ya hay un arbol o una oveja obesa o  no tenemos arboles para plantar
+    }
+    else{
+        //Si se puede colocar
+        QPixmap pixMap;
+        pixMap.load(":/arbol/bonus/Images/BONUS/BonusTree_00.png");
+        pixMap = pixMap.scaled(61, 95, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        matrizLabelsArbolesMisc[posXGranjero][posYGranjero]->setGeometry(230+(posXGranjero*80),20+(posYGranjero*80),61,95);
+        matrizLabelsArbolesMisc[posXGranjero][posYGranjero]->setPixmap(pixMap);
+
+        matrizBoolColocables[posXGranjero][posYGranjero][0] = true;
+        cantidadBonus--;
+        interfazColocarObjetos->setCantidad(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta);
+    }
+}
+//                                                     0      1       2        3          4
+//La tercera posicion matrizBoolColocables[][][X] = [arbol][cuervo][oveja][ovejaObesa][espanta]
+void VentanaPrincipal::colocarEspanta(){
+    if (posXGranjero > 7 || matrizBoolColocables[posXGranjero][posYGranjero][0]||matrizBoolColocables[posXGranjero][posYGranjero][3] ||matrizBoolColocables[posXGranjero][posYGranjero][4]|| cantidadEspanta <= 0 || cantidadEspantaColocados == cantidadMaxEspanta){//|| repeticionClickTile para que tenga que estar seleccionado
+        //No se puede colocar el arbol pues ya hay un arbol o una oveja obesa o  no tenemos arboles para plantar
+    }
+    else{
+        //Si se puede colocar
+        QPixmap pixMap;
+        pixMap.load(":/misc/Images/Scarecrow.png");
+        pixMap = pixMap.scaled(48, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        matrizLabelsArbolesMisc[posXGranjero][posYGranjero]->setGeometry(230+(posXGranjero*80),20+(posYGranjero*80),48,80);
+        matrizLabelsArbolesMisc[posXGranjero][posYGranjero]->setPixmap(pixMap);
+
+        matrizBoolColocables[posXGranjero][posYGranjero][4] = true;
+        cantidadEspanta--;
+        cantidadEspantaColocados++;
+        interfazColocarObjetos->setCantidad(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta);
+    }
+}
+
+
+void VentanaPrincipal::abrirMercado(){
+    //Se crea toda la ventana del mercado
+    cronometroAbrirMercado->stop();
+    ui->labelMercadoChiva->setHidden(false);
+
+
+
+
+    interfazMercado = new InterfazMercado(this);
+    interfazMercado->setGeometry(75,55,774,638);
+    interfazMercado->setWindowFlags(Qt::FramelessWindowHint);
+    interfazMercado->setStyleSheet("background-color:rgb(228, 231, 243);");
+    interfazMercado->setParametros(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta, cantidadMaxEspanta, dinero);
+    interfazMercado->setInfoABB(costoABB, crecimientoABB, frutosCosechaABB, cantSegCosechaABB, menorVentaFrutosABB, mayorVentaFrutosABB);
+    interfazMercado->setInfoHeap(costoHeap, crecimientoHeap, frutosCosechaHeap, cantSegCosechaHeap, menorVentaFrutosHeap, mayorVentaFrutosHeap);
+    interfazMercado->setInfoAVL(costoAVL, crecimientoAVL, frutosCosechaAVL, cantSegCosechaAVL, menorVentaFrutosAVL, mayorVentaFrutosAVL);
+    interfazMercado->setInfoBonus(costoBonus, crecimientoBonus, frutosCosechaBonus, cantSegCosechaBonus, menorVentaFrutosBonus, mayorVentaFrutosBonus);
+    interfazMercado->setInfoEspanta(costoEspanta);
+
+    connect(interfazMercado, SIGNAL(comprarABB()), this, SLOT(comprarABB()));
+    connect(interfazMercado, SIGNAL(comprarHeap()), this, SLOT(comprarHeap()));
+    connect(interfazMercado, SIGNAL(comprarAVL()), this, SLOT(comprarAVL()));
+    connect(interfazMercado, SIGNAL(comprarBonus()), this, SLOT(comprarBonus()));
+    connect(interfazMercado, SIGNAL(comprarEspanta()), this, SLOT(comprarEspanta()));
+
+    /*QVector<QVector<int>> vector;
+    for (int i = 0; i < 4 ; i++){
+        QVector<int> vectorInt;//[[TIPO][UBICACION X][UBICACION Y][CANTIDAD FRUTOS][VENDIDOS][PERDIDOS]]
+        vectorInt.push_back(0);
+        vectorInt.push_back(5);
+        vectorInt.push_back(5);
+        vectorInt.push_back(60);
+        vectorInt.push_back(80);
+        vectorInt.push_back(24);
+        vector.push_back(vectorInt);
+    }
+
+
+    setArbolesEnGranja(vector);*/
+    interfazMercado->setPunteros(&arbolesEnGranja, &dinero);
+    interfazMercado->setTableArbolesEnGranja(arbolesEnGranja);//DEBE IR DE EXACTAMENTE ANTES DE MOSTRAR EL MERCADO
+
+    interfazMercado->show();
+    interfazMercado->setHidden(true);
+
+    ui->bAbrirMercado->setDisabled(false);
+
+    tiempoRestanteMercado = tiempoCierraMercado/1000;
+    ui->labelTimerMercado->setText(QString::number(tiempoRestanteMercado));
+    ui->labelMercado->setText("Mercado Abierto");
+    cronometroTiempoRestante->start(1000);//Cada segundo
+
+    cronometroCerrarMercado->start(tiempoCierraMercado);
+}
+
+void VentanaPrincipal::cerrarMercado(){
+    cronometroCerrarMercado->stop();
+    ui->labelMercadoChiva->setHidden(true);
+
+    interfazMercado->deleteLater();
+    ui->bAbrirMercado->toggled(false);
+    ui->bAbrirMercado->setDisabled(true);
+
+    ui->labelTimerMercado->setText("");
+    ui->labelMercado->setText("Mercado Cerrado");
+    cronometroTiempoRestante->stop();
+
+    cronometroAbrirMercado->start(tiempoAbreMercado);
+}
+
+void VentanaPrincipal::setLabelTiempoRestante(){
+    tiempoRestanteMercado--;
+    ui->labelTimerMercado->setText(QString::number(tiempoRestanteMercado));
+}
+
+void VentanaPrincipal::on_bAbrirMercado_toggled(bool checked){
+    if (interfazMercado!=nullptr){
+        interfazMercado->setHidden(!checked);
+        if (checked)//Lo estoy abriendo para verlo
+            interfazMercado->setParametros(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta, cantidadMaxEspanta, dinero);
+    }
+}
+
+void VentanaPrincipal::comprarABB(){
+    cantidadABB++;
+    dinero-=costoABB;
+    interfazColocarObjetos->setCantidad(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta);
+}
+
+void VentanaPrincipal::comprarHeap(){
+    cantidadHeap++;
+    dinero-=costoHeap;
+    interfazColocarObjetos->setCantidad(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta);
+}
+
+void VentanaPrincipal::comprarAVL(){
+    cantidadAVL++;
+    dinero-=costoAVL;
+    interfazColocarObjetos->setCantidad(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta);
+}
+
+void VentanaPrincipal::comprarBonus(){
+    cantidadBonus++;
+    dinero-=costoBonus;
+    interfazColocarObjetos->setCantidad(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta);
+}
+
+void VentanaPrincipal::comprarEspanta(){
+    cantidadEspanta++;
+    dinero-=costoEspanta;
+    interfazColocarObjetos->setCantidad(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta);
+}
+
+void VentanaPrincipal::setArbolesEnGranja(QVector<QVector<int> > pArbolesEnGranja){
+    arbolesEnGranja = pArbolesEnGranja;
+}
+
+void VentanaPrincipal::moverGranjero(){
+    if (posTableroX < 8 && posTableroY < 8){
+        if ((posTableroX == posXGranjero && posTableroY == posYGranjero)  || repeticionClickTile){
+            caminarAbajo->stop();
+            caminarArriba->stop();
+            caminarIzquierda->stop();
+            caminarDerecha->stop();
+            QPixmap pixMap;
+            pixMap.load(":/farmer/front/Images/Farmer/front/front2.png");
+            labelGranjero->setPixmap(pixMap);
+
+            pixMap.load(":/misc/Images/grass.png");
+            pixMap = pixMap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            matrizLabelsZacate[posTableroX][posTableroY]->setPixmap(pixMap);
+
+            cronometroMovimientoGranjero->stop();
+        }
+        else if (posTableroX == posXGranjero){
+            //Como la posicion X es la misma entonces debo mover el Y
+            if (posTableroY > posYGranjero){
+                posYGranjero++;
+
+                caminarArriba->stop();
+                caminarIzquierda->stop();
+                caminarDerecha->stop();
+
+                labelGranjero->setMovie(caminarAbajo);
+                caminarAbajo->start();
+            }
+            else{
+                posYGranjero--;
+
+                caminarAbajo->stop();
+                caminarIzquierda->stop();
+                caminarDerecha->stop();
+
+                labelGranjero->setMovie(caminarArriba);
+                caminarArriba->start();
+                }
+        }
+        else{
+            //Como la posicion Y es la misma entonces debo mover el X
+            //Si son distintas igual trataré de igualar primero el Y
+            if (posTableroX > posXGranjero){
+                posXGranjero++;
+
+                caminarAbajo->stop();
+                caminarArriba->stop();
+                caminarIzquierda->stop();
+
+                labelGranjero->setMovie(caminarDerecha);
+                caminarDerecha->start();
+            }
+            else{
+                posXGranjero--;
+
+                caminarAbajo->stop();
+                caminarArriba->stop();
+                caminarDerecha->stop();
+
+                labelGranjero->setMovie(caminarIzquierda);
+                caminarIzquierda->start();
+            }
+        }
+        labelGranjero->move(230 + 80*posXGranjero, 60 + 80*posYGranjero);
+    }
+}
+
+void VentanaPrincipal::on_bConfigurarComp_toggled(bool checked)
+{
+    if (interfazConfiguracion!=nullptr){
+        interfazConfiguracion->setHidden(!checked);
+        //if (checked)//Lo estoy abriendo para verlo
+            //interfazMercado->setParametros(cantidadABB, cantidadHeap, cantidadAVL, cantidadBonus, cantidadEspanta, cantidadMaxEspanta, dinero);
+    }
+}
+
+void VentanaPrincipal::on_bVerGraficas_toggled(bool checked)
+{
+    if (checked){//Es la primera vez que le doy click y debo crear la interfaz
+        interfazGraficas = new InterfazGraficas(this);
+        //interfazGraficas->setWindowFlags(Qt::FramelessWindowHint);
+
+        /*
+        QVector<QVector<int>> vector;
+        for (int i = 0; i < 4 ; i++){
+            QVector<int> vectorInt;//[[TIPO][UBICACION X][UBICACION Y][CANTIDAD FRUTOS][VENDIDOS][PERDIDOS]]
+            vectorInt.push_back(0);
+            vectorInt.push_back(5);
+            vectorInt.push_back(5);
+            vectorInt.push_back(60);
+            vectorInt.push_back(80);
+            vectorInt.push_back(24);
+            vector.push_back(vectorInt);
+        }
+
+        interfazGraficas->setTableArbolesEnGranja(vector);*/
+
+        interfazGraficas->show();
+    }
+    else{//Es el segundo y debo eliminarla
+        interfazGraficas->deleteLater();
+    }
+}
