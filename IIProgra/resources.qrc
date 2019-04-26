@@ -49,10 +49,10 @@
         <file>Images/deadtrees/parasitoABB.png</file>
     </qresource>
     <qresource prefix="/arbol/heap">
-        <file>Images/HEAP/HEAP_00.png</file>
-        <file>Images/HEAP/HEAP_01.png</file>
-        <file>Images/HEAP/HEAP_02.png</file>
-        <file>Images/HEAP/HEAP_03.png</file>
+        <file>Images/Heap/HEAP_00.png</file>
+        <file>Images/Heap/HEAP_01.png</file>
+        <file>Images/Heap/HEAP_02.png</file>
+        <file>Images/Heap/HEAP_03.png</file>
         <file>Images/deadtrees/parasitoHeap.png</file>
     </qresource>
     <qresource prefix="/arbol/avl">
@@ -63,10 +63,10 @@
         <file>Images/deadtrees/parasitoAVL.png</file>
     </qresource>
     <qresource prefix="/arbol/bonus">
-        <file>Images/BONUS/BonusTree_00.png</file>
-        <file>Images/BONUS/BonusTree_01.png</file>
-        <file>Images/BONUS/BonusTree_02.png</file>
-        <file>Images/BONUS/BonusTree_03.png</file>
+        <file>Images/Bonus/BonusTree_00.png</file>
+        <file>Images/Bonus/BonusTree_01.png</file>
+        <file>Images/Bonus/BonusTree_02.png</file>
+        <file>Images/Bonus/BonusTree_03.png</file>
         <file>Images/deadtrees/parasitoBonus.png</file>
     </qresource>
     <qresource prefix="/gifs/farmer">
